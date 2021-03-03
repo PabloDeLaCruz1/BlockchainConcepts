@@ -1,0 +1,28 @@
+{
+  "name": "project_1",
+  "version": "1.0.0",
+  "description": "A Blockchain application to store data into the blocks",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon --exec babel-node App.js"
+  },
+  "author": "Pablo",
+  "license": "ISC",
+  "dependencies": {
+    "bitcoinjs-lib": "^5.2.0",
+    "bitcoinjs-message": "^2.2.0",
+    "body-parser": "^1.18.3",
+    "crypto-js": "^4.0.0",
+    "express": "^4.17.1",
+    "hex2ascii": "^0.0.3",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.13.0",
+    "@babel/core": "^7.13.8",
+    "@babel/node": "^7.13.0",
+    "@babel/preset-env": "^7.13.9",
+    "nodemon": "^2.0.7"
+  }
+}
