@@ -23,6 +23,14 @@ class Block {
         this.previousBlockHash = null; // Reference to the previous Block Hash
     }
 
+    setPreviousBlockHash(hash) {
+        this.previousBlockHash = hash;
+    }
+
+    getPreviousBlockHash() {
+        return this.previousBlockHash;
+    }
+
     /**
      *  validate() method will validate if the block has been tampered or not.
      *  Been tampered means that someone from outside the application tried to change

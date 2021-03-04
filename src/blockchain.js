@@ -65,11 +65,17 @@ class Blockchain {
      */
     _addBlock(block) {
         let self = this;
-        console.log(self);
+
         return new Promise(async (resolve, reject) => {
-            if (self.height !== -1){
-            } 
-            if (true) {
+            if (self.height !== -1) {
+                block.setPreviousBlockHash(self.chain[self.height].hash)
+            }
+            if (block !== null) {
+                block.generateHash();
+                self.height++
+                block.height = self.height
+                block.time = new Date().getTime().toString().slice(0, -3)
+                self.chain.push(block)
                 resolve(block)
             } else {
                 reject(Error("Error Adding Block"))
@@ -124,7 +130,12 @@ class Blockchain {
     getBlockByHash(hash) {
         let self = this;
         return new Promise((resolve, reject) => {
-
+            for (let i = 0; i < self.height; i++) {
+                if (self.chain[i].hash === hash) {
+                    resolve(self.chain[i])
+                }
+            }
+            reject(Error("Couldnt get block by hash"))
         });
     }
 
@@ -174,5 +185,6 @@ class Blockchain {
     }
 
 }
+
 
 module.exports.Blockchain = Blockchain;
