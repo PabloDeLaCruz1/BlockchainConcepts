@@ -76,6 +76,7 @@ class Blockchain {
                 block.height = self.height
                 block.time = new Date().getTime().toString().slice(0, -3)
                 self.chain.push(block)
+
                 resolve(block)
             } else {
                 reject(Error("Error Adding Block"))
@@ -91,8 +92,14 @@ class Blockchain {
      * The method return a Promise that will resolve with the message to be signed
      * @param {*} address 
      */
+
+    //TODO TEST
     requestMessageOwnershipVerification(address) {
         return new Promise((resolve) => {
+            if (address !== "") {
+                resolve(`${address}:${new Date().getTime().toString().slice(0,-3)}:starRegistry`)
+            }
+            reject.Error("Error requestMessageOwnershipVerification")
 
         });
     }
@@ -117,6 +124,21 @@ class Blockchain {
     submitStar(address, message, signature, star) {
         let self = this;
         return new Promise(async (resolve, reject) => {
+            let messageTime = parseInt(message.split(':')[1])
+            let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
+
+            if (currentTime - messageTime < 300) {
+                bitcoinMessage.verify(message, address, signature)
+                let block = new BlockClass.Block({
+                    "Another block?": "Yes another block you got it"
+                })
+                self._addBlock(block)
+                resolve(block)
+            } else {
+                reject(Error("Its been more than 5min"))
+            }
+
+
 
         });
     }
