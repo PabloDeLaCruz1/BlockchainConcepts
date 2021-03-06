@@ -1,6 +1,5 @@
 /**
  *                 ApplicationServer
- *             (Do not change this code)
  * Require Modules to setup the REST Api
  * - `express` Express.js is a Web Framework
  * - `morgan` Isn't required but help with debugging and logging
@@ -9,9 +8,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
-/**
- * Require the Blockchain class. This allow us to have only one instance of the class.
- */
+
 const BlockChain = require('./src/blockchain.js');
 const Block = require('./src/block')
 class ApplicationServer {
@@ -54,7 +51,6 @@ class ApplicationServer {
 			console.log(`Server Listening for port: ${self.app.get("port")}`);
 		});
 	}
-
 }
 
 new ApplicationServer();

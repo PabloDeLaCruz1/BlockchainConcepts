@@ -34,7 +34,7 @@ class Block {
     /**
      *  validate() method will validate if the block has been tampered or not.
      *  Been tampered means that someone from outside the application tried to change
-     *  values in the block data as a consecuence the hash of the block should be different.
+     *  values in the block data as a consequence the hash of the block should be different.
      *  Steps:
      *  1. Return a new promise to allow the method be called asynchronous.
      *  2. Save the in auxiliary variable the current hash of the block (`this` represent the block object)
@@ -58,7 +58,6 @@ class Block {
                 reject(false);
             }
         })
-
     }
     generateHash() {
         this.hash = SHA256(JSON.stringify(this)).toString()
@@ -78,11 +77,9 @@ class Block {
         let self = this
         return new Promise((resolve, reject) => {
             let encodedData = hex2ascii(self.body)
-            console.log(encodedData);
             // Decoding the data to retrieve the JSON representation of the object
             // Parse the data to an object to be retrieve.
             let parsedData = JSON.parse(encodedData);
-            console.log(parsedData);
             // Resolve with the data if the object isn't the Genesis block //overthinking is bad
             if (parsedData === "") {
                 reject(Error("This is the Genesis Block"))
@@ -90,28 +87,7 @@ class Block {
                 resolve(parsedData)
             }
         })
-
     }
-
 }
-
-/**
- * Creating a block object
- */
-const block = new Block('{ "name":"John", "age":30, "city":"New York"}');
-// console.log(block.getBData());
-
-
-// // Generating the block hash
-// block.validate().then((result) => {
-//     console.log("Results -------- 1.", result);
-//     console.log(`Block Hash-------2. ${result.hash}`);
-//     console.log(`Block: ${JSON.stringify(result)}`);
-// }).catch((error) => {
-//     console.log(error)
-// });
-
-
-
 
 module.exports.Block = Block; // Exposing the Block class as a module

@@ -1,12 +1,10 @@
 /**
  *          BlockchainController
- *       (Do not change this code)
  * 
  * This class exposes the endpoints that the client applications will use to interact with the 
  * Blockchain dataset
  */
 class BlockchainController {
-
     //The constructor receive the instance of the express.js app and the Blockchain class
     constructor(app, blockchainObj) {
         this.app = app;
@@ -19,7 +17,7 @@ class BlockchainController {
         this.getStarsByOwner();
     }
 
-    // Enpoint to Get a Block by Height (GET Endpoint)
+    // Endpoint to Get a Block by Height (GET Endpoint)
     getBlockByHeight() {
         this.app.get("/block/:height", async (req, res) => {
             if (req.params.height) {
@@ -43,7 +41,6 @@ class BlockchainController {
             if (req.body.address) {
                 const address = req.body.address;
                 const message = await this.blockchain.requestMessageOwnershipVerification(address);
-                console.log(message);
                 if (message) {
                     return res.status(200).json(message);
                 } else {
@@ -65,22 +62,15 @@ class BlockchainController {
                 const star = req.body.star;
                 try {
                     let block = await this.blockchain.submitStar(address, message, signature, star);
-                    console.log(block);
                     if (block) {
-                        console.log(block);
                         return res.status(200).json(block);
                     } else {
-                        console.log("here?423----");
-
                         return res.status(500).send("An error happened!");
                     }
                 } catch (error) {
-                    console.log("here?----");
                     return res.status(500).send(error);
                 }
             } else {
-                console.log("here3?----");
-
                 return res.status(500).send("Check the Body Parameter!");
             }
         });
@@ -109,9 +99,7 @@ class BlockchainController {
         this.app.get("/blocks/:address", async (req, res) => {
             if (req.params.address) {
                 const address = req.params.address;
-                console.log("address------", address);
                 try {
-                    console.log("hello");
                     let stars = await this.blockchain.getStarsByWalletAddress(address);
                     if (stars) {
                         return res.status(200).json(stars);

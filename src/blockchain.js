@@ -1,10 +1,10 @@
 /**
  *                          Blockchain Class
  *  The Blockchain class contain the basics functions to create your own private blockchain
- *  It uses libraries like `crypto-js` to create the hashes for each block and `bitcoinjs-message` 
+ *  It uses libraries `crypto-js` to create the hashes for each block and `bitcoinjs-message` 
  *  to verify a message signature. The chain is stored in the array
- *  `this.chain = [];`. Of course each time you run the application the chain will be empty because and array
- *  isn't a persisten storage method. // connect pg
+ *  `this.chain = [];`. Of course each time you run the application the chain will be empty because an array
+ *  isn't a persistent storage method. // TODO connect pg
  *  
  */
 
@@ -15,9 +15,8 @@ const bitcoinMessage = require('bitcoinjs-message');
 class Blockchain {
 
     /**
-     * Constructor of the class, you will need to setup your chain array and the height
-     * of your chain (the length of your chain array).
-     * Also everytime you create a Blockchain class you will need to initialized the chain creating
+     * Constructor 
+     * Also every time you create a Blockchain class you will need to initialized the chain creating
      * the Genesis Block.
      * The methods in this class will always return a Promise to allow client applications or
      * other backends to call asynchronous functions.
@@ -56,10 +55,10 @@ class Blockchain {
      * @param {*} block 
      * The method will return a Promise that will resolve with the block added
      * or reject if an error happen during the execution.
-     * You will need to check for the height to assign the `previousBlockHash`,
-     * assign the `timestamp` and the correct `height`...At the end you need to 
-     * create the `block hash` and push the block into the chain array. Don't for get 
-     * to update the `this.height`
+     * Check for the height to assign the `previousBlockHash`,
+     * assign the `timestamp` and the correct `height`...
+     * create the `block hash` and push the block into the chain array.
+     * update the `this.height`
      * Note: the symbol `_` in the method name indicates in the javascript convention 
      * that this method is a private method. 
      */
@@ -86,7 +85,7 @@ class Blockchain {
 
     /**
      * The requestMessageOwnershipVerification(address) method
-     * will allow you  to request a message that you will use to
+     * will allow you to request a message that you will use to
      * sign it with your Bitcoin Wallet (Electrum or Bitcoin Core)
      * This is the first step before submit your Block.
      * The method return a Promise that will resolve with the message to be signed
@@ -111,7 +110,7 @@ class Blockchain {
      * 1. Get the time from the message sent as a parameter example: `parseInt(message.split(':')[1])`
      * 2. Get the current time: `let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));`
      * 3. Check if the time elapsed is less than 5 minutes
-     * 4. Veify the message with wallet address and signature: `bitcoinMessage.verify(message, address, signature)`
+     * 4. Verify the message with wallet address and signature: `bitcoinMessage.verify(message, address, signature)`
      * 5. Create the block and add it to the chain
      * 6. Resolve with the block added.
      * @param {*} address 
@@ -155,7 +154,7 @@ class Blockchain {
                     resolve(self.chain[i])
                 }
             }
-            reject(Error("Couldnt get block by hash"))
+            reject(Error("Couldn't get block by hash"))
         });
     }
 
@@ -194,7 +193,6 @@ class Blockchain {
                     stars.push(parsedData.star)
                 }
             }
-            console.log(stars);
             if (stars.length > 0) {
                 resolve(stars)
             } else {
@@ -228,6 +226,5 @@ class Blockchain {
         });
     }
 }
-
 
 module.exports.Blockchain = Blockchain;

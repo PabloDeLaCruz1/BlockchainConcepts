@@ -5,4 +5,3 @@ Concept Implementation:
     - Blockchain Identity
     - Proof of Existence
 
-Boilerplate by Udacity
