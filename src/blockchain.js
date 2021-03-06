@@ -93,14 +93,12 @@ class Blockchain {
      * @param {*} address 
      */
 
-    //TODO TEST
     requestMessageOwnershipVerification(address) {
         return new Promise((resolve) => {
             if (address !== "") {
                 resolve(`${address}:${new Date().getTime().toString().slice(0,-3)}:starRegistry`)
             }
             reject.Error("Error requestMessageOwnershipVerification")
-
         });
     }
 
@@ -126,20 +124,20 @@ class Blockchain {
         return new Promise(async (resolve, reject) => {
             let messageTime = parseInt(message.split(':')[1])
             let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
-
-            if (currentTime - messageTime < 300) {
-                bitcoinMessage.verify(message, address, signature)
-                let block = new BlockClass.Block({
-                    "Another block?": "Yes another block you got it"
-                })
-                self._addBlock(block)
-                resolve(block)
+            if (currentTime - messageTime < 3000) { //testing
+                if (bitcoinMessage.verify(message, address, signature)) {
+                    let block = new BlockClass.Block({
+                        "Another block?": "Yes another block, you got it",
+                        "star": star,
+                        "address": address,
+                        "signature": signature
+                    })
+                    self._addBlock(block)
+                    resolve(block)
+                }
             } else {
                 reject(Error("Its been more than 5min"))
             }
-
-
-
         });
     }
 
@@ -185,10 +183,23 @@ class Blockchain {
      * @param {*} address 
      */
     getStarsByWalletAddress(address) {
-        let self = this;
+        let self = this
         let stars = [];
-        return new Promise((resolve, reject) => {
 
+        return new Promise((resolve, reject) => {
+            for (let i = 1; i <= self.height; i++) {
+                let dataHexCode = new Buffer.from(self.chain[i].body, 'hex').toString()
+                let parsedData = JSON.parse(dataHexCode);
+                if (parsedData.address === address) {
+                    stars.push(parsedData.star)
+                }
+            }
+            console.log(stars);
+            if (stars.length > 0) {
+                resolve(stars)
+            } else {
+                reject(Error("No stars for you city boy"))
+            }
         });
     }
 
@@ -202,10 +213,20 @@ class Blockchain {
         let self = this;
         let errorLog = [];
         return new Promise(async (resolve, reject) => {
-
+            for (let i = 0; i <= self.height; i++) {
+                if (self.chain[i].validate()) {
+                    if (self.chain[i].previousBlockHash === self.chain[i - 1].hash) {
+                        continue;
+                    } else {
+                        errorLog.push(Error("Previous Block Hash does not match"))
+                    }
+                } else {
+                    errorLog.push(Error("Block does not validate"))
+                }
+            }
+            resolve(errorLog)
         });
     }
-
 }
 
 
