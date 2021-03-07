@@ -52,7 +52,13 @@ class Block {
             // Comparing if the hashes changed
             // Returning the Block is not valid
             // Returning the Block is valid
-            if (self.hash === SHA256(JSON.stringify(self)).toString()) {
+
+            let currentHash = self.hash
+            self.hash = null
+            let newHash = SHA256(JSON.stringify(self)).toString()
+            self.hash = currentHash
+
+            if (currentHash === newHash) {
                 resolve(true);
             } else {
                 reject(false);
@@ -75,18 +81,15 @@ class Block {
     getBData() {
         // Getting the encoded data saved in the Block
         let self = this
-        return new Promise((resolve, reject) => {
-            let encodedData = hex2ascii(self.body)
-            // Decoding the data to retrieve the JSON representation of the object
-            // Parse the data to an object to be retrieve.
-            let parsedData = JSON.parse(encodedData);
-            // Resolve with the data if the object isn't the Genesis block //overthinking is bad
-            if (parsedData === "") {
-                reject(Error("This is the Genesis Block"))
-            } else {
-                resolve(parsedData)
-            }
-        })
+        let encodedData = hex2ascii(self.body)
+        // Decoding the data to retrieve the JSON representation of the object
+        // Parse the data to an object to be retrieve.
+        let parsedData = JSON.parse(encodedData);
+        // Resolve with the data if the object isn't the Genesis block //overthinking is bad
+        if (parsedData === "") {
+            return (Error("This is the Genesis Block"))
+        }
+        return parsedData;
     }
 }
 
