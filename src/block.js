@@ -54,17 +54,11 @@ class Block {
             // Returning the Block is valid
             let currentHash = self.hash
             self.hash = null
-            console.log("self--------", self);
             let newHash = SHA256(JSON.stringify(self)).toString()
             self.hash = currentHash
-            console.log(currentHash);
-            console.log(newHash);
             if (currentHash === newHash) {
-                console.log("-------------block validated------------");
                 resolve(true);
             } else {
-                console.log("-------------block blocked------------");
-
                 resolve(false);
             }
         })
@@ -97,5 +91,3 @@ class Block {
 }
 
 module.exports.Block = Block; // Exposing the Block class as a module
-
-
