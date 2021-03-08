@@ -43,7 +43,7 @@ class Block {
      *  5. Resolve true or false depending if it is valid or not.
      *  Note: to access the class values inside a Promise code you need to create an auxiliary value `let self = this;`
      */
-    validate() {
+    validateBlock() {
         // Save in auxiliary variable the current block hash
         let self = this;
 

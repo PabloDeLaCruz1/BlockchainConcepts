@@ -75,7 +75,7 @@ class Blockchain {
                 block.time = new Date().getTime().toString().slice(0, -3)
                 block.generateHash();
 
-                if (self.height > 1) {
+                if (self.height > 0) {
                     self.validateChain()
                         .then(function (chainErrLogs) {
                             if (chainErrLogs.length < 1) {
@@ -228,7 +228,7 @@ class Blockchain {
         return new Promise(async (resolve, reject) => {
             let errorLog = [];
             for (let i = 1; i <= self.height - 1; i++) {
-                if (await self.chain[i].validate()) {
+                if (await self.chain[i].validateBlock()) {
                     if (self.chain[i].previousBlockHash === self.chain[i - 1].hash) {
                         continue;
                     } else {
