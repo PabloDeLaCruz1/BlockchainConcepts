@@ -52,16 +52,20 @@ class Block {
             // Comparing if the hashes changed
             // Returning the Block is not valid
             // Returning the Block is valid
-
             let currentHash = self.hash
             self.hash = null
+            console.log("self--------", self);
             let newHash = SHA256(JSON.stringify(self)).toString()
             self.hash = currentHash
-
+            console.log(currentHash);
+            console.log(newHash);
             if (currentHash === newHash) {
+                console.log("-------------block validated------------");
                 resolve(true);
             } else {
-                reject(false);
+                console.log("-------------block blocked------------");
+
+                resolve(false);
             }
         })
     }
@@ -80,8 +84,7 @@ class Block {
      */
     getBData() {
         // Getting the encoded data saved in the Block
-        let self = this
-        let encodedData = hex2ascii(self.body)
+        let encodedData = hex2ascii(this.body)
         // Decoding the data to retrieve the JSON representation of the object
         // Parse the data to an object to be retrieve.
         let parsedData = JSON.parse(encodedData);
@@ -94,3 +97,5 @@ class Block {
 }
 
 module.exports.Block = Block; // Exposing the Block class as a module
+
+

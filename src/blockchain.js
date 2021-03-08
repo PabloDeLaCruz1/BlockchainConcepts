@@ -37,7 +37,7 @@ class Blockchain {
             let block = new BlockClass.Block({
                 data: 'Genesis Block'
             });
-            await this._addBlock(block);
+            await this._addBlock(block)
         }
     }
 
@@ -64,22 +64,25 @@ class Blockchain {
      */
     _addBlock(block) {
         let self = this;
-
+        console.log("blocksss-sssssssssssssss------", block);
         return new Promise(async (resolve, reject) => {
-            if (self.height !== -1) {
+            // self.validateChain()
+            //     .then(function (chainErrLogs) {
+            if (self.height > -1) {
                 block.setPreviousBlockHash(self.chain[self.height].hash)
             }
-            if (block !== null) {
+            if (block !== null /*&& chainErrLogs.length < 1*/) {
                 block.generateHash();
                 self.height++
                 block.height = self.height
                 block.time = new Date().getTime().toString().slice(0, -3)
                 self.chain.push(block)
-
                 resolve(block)
             } else {
-                reject(Error("Error Adding Block"))
+                console.log("----block not added------");
+                resolve(Error("Error Adding Block"))
             }
+            // })
         });
     }
 
@@ -120,20 +123,22 @@ class Blockchain {
      */
     submitStar(address, message, signature, star) {
         let self = this;
+        console.log("------------submitStar-------------------");
+
         return new Promise(async (resolve, reject) => {
             let messageTime = parseInt(message.split(':')[1])
             let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
-            if (currentTime - messageTime < 3000) { //testing
-                if (bitcoinMessage.verify(message, address, signature)) {
-                    let block = new BlockClass.Block({
-                        "Another block?": "Yes another block, you got it",
-                        "star": star,
-                        "address": address,
-                        "signature": signature
-                    })
-                    self._addBlock(block)
-                    resolve(block)
-                }
+            if (currentTime - messageTime < 3000) {
+                // if (bitcoinMessage.verify(message, address, signature)) {
+                let block = new BlockClass.Block({
+                    "Another block?": "Yes another block, you got it",
+                    "star": star,
+                    "address": address,
+                    "signature": signature
+                })
+                await self._addBlock(block)
+                resolve(block)
+                // }
             } else {
                 reject(Error("Its been more than 5min"))
             }
@@ -170,7 +175,7 @@ class Blockchain {
             if (block) {
                 resolve(block);
             } else {
-                resolve(null);
+                reject(null);
             }
         });
     }
@@ -184,6 +189,10 @@ class Blockchain {
     getStarsByWalletAddress(address) {
         let self = this
         let stars = [];
+        let starsObj = {
+            "address": address,
+            "stars": stars
+        }
 
         return new Promise((resolve, reject) => {
             for (let i = 1; i <= self.height; i++) {
@@ -194,7 +203,7 @@ class Blockchain {
                 }
             }
             if (stars.length > 0) {
-                resolve(stars)
+                resolve(starsObj)
             } else {
                 reject(Error("No stars for you city boy"))
             }
@@ -209,17 +218,21 @@ class Blockchain {
      */
     validateChain() {
         let self = this;
-        let errorLog = [];
+        console.log("----------Validating Block----------------height", self.height);
+
         return new Promise(async (resolve, reject) => {
+            let errorLog = [];
             for (let i = 0; i <= self.height; i++) {
-                if (self.chain[i].validate()) {
-                    if (self.chain[i].previousBlockHash === self.chain[i - 1].hash) {
+                if (await self.chain[i].validate()) {
+                    console.log("self.chain[i].previousBlockHash ", self.chain[i].previousBlockHash);
+                    console.log("self.chain[i - 1].hash", self.chain[i - 1].hash);
+                    if (i > 0 && self.chain[i].previousBlockHash === self.chain[i - 1].hash) {
                         continue;
                     } else {
                         errorLog.push(Error("Previous Block Hash does not match"))
                     }
                 } else {
-                    errorLog.push(Error("Block does not validate"))
+                    errorLog.push(Error("Block does not validate in chain"))
                 }
             }
             resolve(errorLog)
