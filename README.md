@@ -4,5 +4,3 @@ Concept Implementation:
     - Wallet
     - Blockchain Identity
     - Proof of Existence
-
--Boilerplate by Udacity 
